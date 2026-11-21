@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday! ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Optional MP3 fallback; jika tidak ada, otomatis pakai Web Audio Music Box -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="musik.mp3" type="audio/mpeg" />
+    <source src="music/musik.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Floating Controls -->
+  <div class="floating-controls">
+    <button id="musicBtn" class="ctrl-btn" title="Putar / Jeda Musik" aria-label="Toggle Music">🎵</button>
+  </div>
+
+  <!-- Confetti & Romantic Floating Hearts -->
+  <canvas id="confettiCanvas"></canvas>
+  <div class="romantic-floaters" id="romanticFloaters" aria-hidden="true"></div>
+
+  <!-- ================= SCREEN 1: VELVET CURTAIN + STARLIT CLOCK ================= -->
+  <section id="screen-curtain" class="screen active">
+    <div class="curtain-panel curtain-left"></div>
+    <div class="curtain-panel curtain-right"></div>
+    <div class="fairy-lights" id="fairyLights"></div>
+
+    <div id="clockContainer" class="clock-container">
+      <div class="analog-clock">
+        <div class="clock-face" id="clockFace">
+          <div class="hand hour-hand" id="hourHand"></div>
+          <div class="hand minute-hand" id="minuteHand"></div>
+          <div class="hand second-hand" id="secondHand"></div>
+          <div class="clock-center-dot"></div>
+        </div>
+      </div>
+
+      <div class="digital-box">
+        <div class="digital-label">★ MENUJU HARI SPESIALMU ♥ ★</div>
+        <div class="digital-time" id="digitalTime">11:59:56</div>
+        <div class="digital-sub">Tunggu sebentar yaa, ada kejutan kecil untukmu... ✨</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 2: SCRAPBOOK PASSCODE ================= -->
+  <section id="screen-passcode" class="screen">
+    <div class="passcode-layout">
+      <!-- Left Cream Panel + Scalloped Divider -->
+      <div class="passcode-left">
+        <div class="scallop-frame-outer">
+          <div class="photo-frame-scrapbook" id="passcodePhotoFrame">
+            <div id="passcodePhotoContent" class="photo-inner"></div>
+          </div>
+        </div>
+        <div class="scallop-divider" aria-hidden="true"></div>
+      </div>
+
+      <!-- Right Lavender Keypad Panel -->
+      <div class="passcode-right">
+        <div class="keypad-panel">
+          <h1 class="pass-title">Masukkan kode rahasia</h1>
+          <p class="pass-sub" id="passSub">Masukkan 4 digit kode rahasia <span class="hint-pill" id="pinHintPill">(clue: 1234)</span></p>
+
+          <div class="pin-boxes" id="pinBoxes">
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+            <div class="pin-box"></div>
+          </div>
+
+          <button id="retryBtn" class="retry-btn hidden">Coba lagi ❌</button>
+
+          <div class="keypad-grid" id="keypadGrid">
+            <button class="key-btn" data-key="1">1</button>
+            <button class="key-btn" data-key="2">2</button>
+            <button class="key-btn" data-key="3">3</button>
+            <button class="key-btn" data-key="4">4</button>
+            <button class="key-btn" data-key="5">5</button>
+            <button class="key-btn" data-key="6">6</button>
+            <button class="key-btn" data-key="7">7</button>
+            <button class="key-btn" data-key="8">8</button>
+            <button class="key-btn" data-key="9">9</button>
+            <button class="key-btn key-action" data-key="clear" aria-label="Hapus">↺</button>
+            <button class="key-btn" data-key="0">0</button>
+            <button class="key-btn key-heart" data-key="submit" aria-label="Kirim">♥</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 3: TEASER ================= -->
+  <section id="screen-teaser" class="screen gingham-screen">
+    <div class="scrapbook-card">
+      <div class="card-confetti" aria-hidden="true"></div>
+      <div class="teaser-inner">
+        <h2 id="teaserTitle" class="teaser-title">Aku punya sesuatu buat kamu</h2>
+        <div id="teaserIllustration" class="teaser-gif"></div>
+        <p id="teaserSubtitle" class="teaser-sub">Kamu mau lihat nggak?</p>
+        <div class="teaser-actions" id="teaserActions">
+          <button id="btnYes" class="pill-btn btn-red">MAU</button>
+          <button id="btnNo" class="pill-btn btn-red">NGGAK</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 4: MYSTERY HEART GIFTS ================= -->
+  <section id="screen-gifts" class="screen gingham-screen">
+    <div class="scrapbook-card">
+      <div class="card-confetti" aria-hidden="true"></div>
+      <div class="gifts-hub">
+        <div class="hearts-row">
+          <button class="heart-gift" data-gift="kenangan" aria-label="Buka Kenangan">
+            <div class="heart-svg-wrap" id="heartGift1"></div>
+            <span class="gift-badge hidden" id="badge-kenangan">✓</span>
+          </button>
+
+          <button class="heart-gift" data-gift="cake" aria-label="Buka Kue Ulang Tahun">
+            <div class="heart-svg-wrap" id="heartGift2"></div>
+            <span class="gift-badge hidden" id="badge-cake">✓</span>
+          </button>
+
+          <button class="heart-gift" data-gift="letter" aria-label="Buka Surat">
+            <div class="heart-svg-wrap" id="heartGift3"></div>
+            <span class="gift-badge hidden" id="badge-letter">✓</span>
+          </button>
+        </div>
+
+        <div class="mystery-prompt-card">
+          <div id="mysteryChar" class="mystery-char"></div>
+          <p class="mystery-text">Ketuk kotak misterinya untuk membuka hadiahmu!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 5A: KENANGAN GALLERY ================= -->
+  <section id="screen-kenangan" class="screen gingham-screen">
+    <div class="scrapbook-card kenangan-card">
+      <div class="card-confetti" aria-hidden="true"></div>
+
+      <div class="garland-banner" id="garlandBanner"></div>
+
+      <div class="gallery-stage">
+        <div class="polaroid-rope" aria-hidden="true"></div>
+        <button id="galleryPrev" class="nav-circle-btn" aria-label="Sebelumnya">‹</button>
+        <div class="polaroid-track" id="polaroidTrack"></div>
+        <button id="galleryNext" class="nav-circle-btn" aria-label="Berikutnya">›</button>
+      </div>
+
+      <div class="kenangan-footer">
+        <button class="back-pill-btn" data-back="gifts">⬅ Kembali</button>
+        <p class="kenangan-hint">Ketuk foto untuk melihatnya lebih jelas, atau gunakan panah &lt; &gt; untuk melihat semua kenangan 📸</p>
+      </div>
+    </div>
+
+    <div id="photoModal" class="photo-modal hidden">
+      <div class="photo-modal-card">
+        <button id="closeModalBtn" class="close-modal-btn">✕</button>
+        <div id="modalImageContainer" class="modal-img-wrap"></div>
+        <p id="modalCaption" class="modal-caption"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 5B: MAKE A WISH CAKE ================= -->
+  <section id="screen-cake" class="screen gingham-screen">
+    <div class="scrapbook-card cake-outer-card">
+      <div class="card-confetti" aria-hidden="true"></div>
+
+      <div class="cake-inner-frame">
+        <h2 id="cakeTitle" class="cake-title">MAKE A WISH</h2>
+
+        <div class="cake-scene">
+          <div class="doodle-left">I love<br/>you ♥</div>
+
+          <div class="cake-illustration" id="cakeIllustration" title="Klik kue atau lilin untuk meniup!">
+            <div class="candles-row" id="candlesRow">
+              <div class="candle"><div class="flame"></div><div class="smoke"></div><div class="wick"></div><div class="wax wax-1"></div></div>
+              <div class="candle"><div class="flame"></div><div class="smoke"></div><div class="wick"></div><div class="wax wax-2"></div></div>
+              <div class="candle"><div class="flame"></div><div class="smoke"></div><div class="wick"></div><div class="wax wax-3"></div></div>
+              <div class="candle"><div class="flame"></div><div class="smoke"></div><div class="wick"></div><div class="wax wax-4"></div></div>
+              <div class="candle"><div class="flame"></div><div class="smoke"></div><div class="wick"></div><div class="wax wax-5"></div></div>
+            </div>
+            <div class="cake-tier-top"><div class="frosting-drip"></div></div>
+            <div class="cake-tier-bottom"><div class="frosting-drip"></div></div>
+            <div class="cake-plate"></div>
+          </div>
+
+          <div class="doodle-right">
+            <div class="balloons">🎈🎈</div>
+            <div class="boba-cup">🧋</div>
+          </div>
+        </div>
+      </div>
+
+      <p id="cakeMessage" class="cake-message">
+        Make the wish everyone, dan tekan "KLIK AKU" untuk meniup lilinnya! ♥
+      </p>
+
+      <div class="cake-actions">
+        <button id="blowBtn" class="pill-btn btn-red">🕯️ KLIK AKU</button>
+        <button id="relightBtn" class="pill-btn btn-red hidden">🔥 Nyalakan lilin lagi</button>
+        <button class="pill-btn btn-cream-outline" data-back="gifts">🎁 Kembali ke Hadiah</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 5C: LAVENDER LETTER ================= -->
+  <section id="screen-letter" class="screen">
+    <button class="letter-back-btn" data-back="gifts">Kembali</button>
+
+    <div class="letter-layout">
+      <div class="letter-photo-col">
+        <div class="letter-polaroid">
+          <div class="washi-tape"></div>
+          <div class="letter-checkered-border">
+            <div id="letterPhotoContent" class="letter-photo-inner"></div>
+          </div>
+          <div class="purple-bow" aria-hidden="true">🎀</div>
+        </div>
+      </div>
+
+      <div class="letter-text-col">
+        <div id="typewriterText" class="typewriter-box"></div>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
